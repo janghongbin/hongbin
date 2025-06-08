@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2025 by janghongbin (http://jsbin.com/homodol/2/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>2세대 케이팝</title>
+  <script type="text/javascript">
+// <![CDATA[
+var colour="random"; // in addition to "random" can be set to any valid colour eg "#f0f" or "red"
+var sparkles=50;
+
+/****************************
+*  Tinkerbell Magic Sparkle *
+*(c)2005-13 mf2fm web-design*
+*  http://www.mf2fm.com/rv  *
+* DON'T EDIT BELOW THIS BOX *
+****************************/
+var x=ox=400;
+var y=oy=300;
+var swide=800;
+var shigh=600;
+var sleft=sdown=0;
+var tiny=new Array();
+var star=new Array();
+var starv=new Array();
+var starx=new Array();
+var stary=new Array();
+var tinyx=new Array();
+var tinyy=new Array();
+var tinyv=new Array();
+
+window.onload=function() { if (document.getElementById) {
+  var i, rats, rlef, rdow;
+  for (var i=0; i<sparkles; i++) {
+    var rats=createDiv(3, 3);
+    rats.style.visibility="hidden";
+    rats.style.zIndex="999";
+    document.body.appendChild(tiny[i]=rats);
+    starv[i]=0;
+    tinyv[i]=0;
+    var rats=createDiv(5, 5);
+    rats.style.backgroundColor="transparent";
+    rats.style.visibility="hidden";
+    rats.style.zIndex="999";
+    var rlef=createDiv(1, 5);
+    var rdow=createDiv(5, 1);
+    rats.appendChild(rlef);
+    rats.appendChild(rdow);
+    rlef.style.top="2px";
+    rlef.style.left="0px";
+    rdow.style.top="0px";
+    rdow.style.left="2px";
+    document.body.appendChild(star[i]=rats);
+  }
+  set_width();
+  sparkle();
+}}
+
+function sparkle() {
+  var c;
+  if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
+    ox=x;
+    oy=y;
+    for (c=0; c<sparkles; c++) if (!starv[c]) {
+      star[c].style.left=(starx[c]=x)+"px";
+      star[c].style.top=(stary[c]=y+1)+"px";
+      star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+      star[c].childNodes[0].style.backgroundColor=star[c].childNodes[1].style.backgroundColor=(colour=="random")?newColour():colour;
+      star[c].style.visibility="visible";
+      starv[c]=50;
+      break;
+    }
+  }
+  for (c=0; c<sparkles; c++) {
+    if (starv[c]) update_star(c);
+    if (tinyv[c]) update_tiny(c);
+  }
+  setTimeout("sparkle()", 40);
+}
+
+function update_star(i) {
+  if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+  if (starv[i]) {
+    stary[i]+=1+Math.random()*3;
+    starx[i]+=(i%5-2)/5;
+    if (stary[i]<shigh+sdown) {
+      star[i].style.top=stary[i]+"px";
+      star[i].style.left=starx[i]+"px";
+    }
+    else {
+      star[i].style.visibility="hidden";
+      starv[i]=0;
+      return;
+    }
+  }
+  else {
+    tinyv[i]=50;
+    tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+    tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+    tiny[i].style.width="2px";
+    tiny[i].style.height="2px";
+    tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
+    star[i].style.visibility="hidden";
+    tiny[i].style.visibility="visible"
+  }
+}
+
+function update_tiny(i) {
+  if (--tinyv[i]==25) {
+    tiny[i].style.width="1px";
+    tiny[i].style.height="1px";
+  }
+  if (tinyv[i]) {
+    tinyy[i]+=1+Math.random()*3;
+    tinyx[i]+=(i%5-2)/5;
+    if (tinyy[i]<shigh+sdown) {
+      tiny[i].style.top=tinyy[i]+"px";
+      tiny[i].style.left=tinyx[i]+"px";
+    }
+    else {
+      tiny[i].style.visibility="hidden";
+      tinyv[i]=0;
+      return;
+    }
+  }
+  else tiny[i].style.visibility="hidden";
+}
+
+document.onmousemove=mouse;
+function mouse(e) {
+  if (e) {
+    y=e.pageY;
+    x=e.pageX;
+  }
+  else {
+    set_scroll();
+    y=event.y+sdown;
+    x=event.x+sleft;
+  }
+}
+
+window.onscroll=set_scroll;
+function set_scroll() {
+  if (typeof(self.pageYOffset)=='number') {
+    sdown=self.pageYOffset;
+    sleft=self.pageXOffset;
+  }
+  else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+    sdown=document.body.scrollTop;
+    sleft=document.body.scrollLeft;
+  }
+  else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+    sleft=document.documentElement.scrollLeft;
+    sdown=document.documentElement.scrollTop;
+  }
+  else {
+    sdown=0;
+    sleft=0;
+  }
+}
+
+window.onresize=set_width;
+function set_width() {
+  var sw_min=999999;
+  var sh_min=999999;
+  if (document.documentElement && document.documentElement.clientWidth) {
+    if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
+    if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
+  }
+  if (typeof(self.innerWidth)=='number' && self.innerWidth) {
+    if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
+    if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
+  }
+  if (document.body.clientWidth) {
+    if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
+    if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
+  }
+  if (sw_min==999999 || sh_min==999999) {
+    sw_min=800;
+    sh_min=600;
+  }
+  swide=sw_min;
+  shigh=sh_min;
+}
+
+function createDiv(height, width) {
+  var div=document.createElement("div");
+  div.style.position="absolute";
+  div.style.height=height+"px";
+  div.style.width=width+"px";
+  div.style.overflow="hidden";
+  return (div);
+}
+
+function newColour() {
+  var c=new Array();
+  c[0]=255;
+  c[1]=Math.floor(Math.random()*256);
+  c[2]=Math.floor(Math.random()*(256-c[1]/2));
+  c.sort(function(){return (0.5 - Math.random());});
+  return ("rgb("+c[0]+", "+c[1]+", "+c[2]+")");
+}
+// ]]>
+</script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 2800px;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: #141414;
+      background-repeat: no-repeat;
+      background-size: cover; /* 배경이 화면 전체를 채우도록 설정 */
+      background-position: top center;
+      background-attachment: scroll; /* 배경이 스크롤에 따라 움직이도록 설정 */
+    }
+.my-input {
+      width: 800px;
+  margin: 0 auto;
+  display: block;
+     background-image: url(https://i.imgur.com/loSGPTs.jpeg);
+      padding: 50px;
+      border:1.5px solid #ff00e1;
+      line-height: 20px;
+  text-align: center;
+
+    }
+    .header {
+      text-align: center;
+      width: 100%;
+      margin:0 
+      padding-top: 30px;
+    }
+
+    .bg-image2 {
+      width: 30%;
+      max-width: 30%;
+    }
+
+    .content {
+  width: 70%;
+  margin: 860px auto 0;
+  font-size: 1em; 
+  padding: 24px;
+  line-height: 1.6;
+  text-align:left;
+}
+
+    .title-bar {
+  color: cyan;
+  width: 100%;
+  background-color: #ff00b1;
+  font-size: 15px;
+  padding: 1px 2px;
+  margin-top: 50px;
+  text-align: center; 
+}
+    
+        .album-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+    .album-card {
+      border: 1px solid #ccc;
+      width: 250px;
+      text-align: center;
+      padding: 15px;
+    }
+    .album-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+    }
+    .album-info {
+      margin-top: 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+    .album-info p {
+      margin: 5px 0;
+    }
+    .link-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: black;
+      border: 1px solid #ccc;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .link-btn:hover {
+      background-color: #ff69b4;
+      color: white;
+    }
+    .footer-banner {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 15px;
+      background-color: #ff00b1;
+      color: cyan;
+      padding: 1px2;
+      font-weight: ;
+    }
+    
+    .bottom-right-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .bottom-right-link a {
+            display: block;
+        }
+        
+        .bottom-right-link img {
+            width: 150px; /* 원하는 크기로 조정 */
+            height: auto;
+ 
+            transition: transform 0.2s ease;
+        }
+        
+        .bottom-right-link img:hover {
+            transform: scale(1.05);
+        }
+     * {
+      cursor: url(https://cur.cursors-4u.net/symbols/sym-7/sym646.ani), 
+              url(https://cur.cursors-4u.net/symbols/sym-7/sym646.gif), 
+              auto !important;
+    }
+
+    /* 클릭 가능한 요소 위에 올렸을 때 (링크 등) */
+     a img, a, button, input, summary,details [type="submit"] {
+      cursor: url(https://cur.cursors-4u.net/symbols/sym-7/sym644.ani), 
+              url(https://cur.cursors-4u.net/symbols/sym-7/sym644.gif), 
+        pointer !important;}
+  </style>
+</head>
+<body>
+   <div class="bottom-right-link">
+        <a href="https://output.jsbin.com/notineg">
+            <img src="https://i.imgur.com/jbAfkpU.png" alt="헤더 이미지">
+        </a>
+    </div>
+  
+<div class="title-bar">
+  케이♡ ♡1990-2000-2010-2020♡ ♡POP 케이♡ ♡1990-2000-2010-2020♡♡POP
+</div>
+
+<div class="my-input">
+  <div class="header">
+    <img class="bg-image2" src="https://i.imgur.com/mSKQem3.png" alt="로고이미지">
+  </div>
+<div class="content">
+    2세대 케이팝은 대형 기획사(sm, yg, jyp)가 본격적으로 아이돌 트레이닝 시스템을 구축하며<br>
+    일본, 중국, 동남아 등 아시아 시장에서 큰 인기를 끌었다. 
+    <br><br>동방신기, 소녀시대, 슈퍼주니어, 카라, 원더걸스 등의 일본 진출이 성공적으로 이끌어졌으며 원더걸스는
+    미국 빌보드 진입 등 북미 시장을 개척하였다.
+    <br><br>
+    또한 CD 판매에서 디지털 음원 다운로드와 스트리밍 중심으로 시장 변화가 일어났으며
+    음악 방송 순위 시스템이 디지털 음원 점수를 크게 반영하기 시작하였다. (싸이월드, 멜론, 벅스 등 국내 음원 플랫폼 활성화)
+    <br><br>
+    연습생 시스템이 고도화되어, 실력과 외모, 인성 등을 종합적으로 평가하며
+    데뷔 전부터 팬덤 확보를 위한 전략적 마케팅이 진행된 것이 큰 특징이다.
+  </div>
+
+  <div class="album-container">
+
+  <div class="album-card">
+    <img src="https://image.bugsm.co.kr/album/images/500/161/16192.jpg" alt="Shinhwa Album">
+    <div class="album-info">
+      <p><strong>Artist:</strong> SHINHWA</p>
+      <p><strong>Album Title:</strong> Perfect Man (#5 Full-length album)</p>
+      <p><strong>Genre:</strong> Dance Pop</p>
+      <p><strong>Release Date:</strong> March 29, 2002</p>
+    </div>
+    <a href="https://www.youtube.com/watch?v=K0ZfgLYyX9s" class="link-btn" target="_blank">Perfect Man</a>
+  </div>
+
+  <div class="album-card">
+    <img src="https://image.bugsm.co.kr/album/images/500/1840/184001.jpg" alt="Super Junior Album">
+    <div class="album-info">
+      <p><strong>Artist:</strong> SUPER JUNIOR</p>
+      <p><strong>Album Title:</strong> 3rd Full-length album</p>
+      <p><strong>Genre:</strong> Dance Pop</p>
+      <p><strong>Release Date:</strong> March 12, 2009</p>
+    </div>
+    <a href="https://www.youtube.com/watch?v=7ErgffP0wVw" class="link-btn" target="_blank">3rd Full-length album</a>
+  </div>
+
+  <div class="album-card">
+    <img src="https://i.namu.wiki/i/Ut2qUqTHASkyc7aHJbe1rNUd1zXYOK2ZrCjOTk59n-tM1edkDQ6Nj6BWHCsdlkpnNn-A3hHlO1yeq6GdrNMULQ.webp" alt="KARA Album">
+    <div class="album-info">
+      <p><strong>Artist:</strong> KARA</p>
+      <p><strong>Album Title:</strong> Rock U (1st Mini Album)</p>
+      <p><strong>Genre:</strong> Dance Pop</p>
+      <p><strong>Release Date:</strong> July 25, 2008</p>
+    </div>
+    <a href="https://www.youtube.com/watch?v=aqF3qmxv-H8" class="link-btn" target="_blank">Rock U</a>
+  </div>
+
+</div>
+
+<div class="footer-banner">
+</div>
+  </div>
+</body>
+</html>
